@@ -1,1 +1,77 @@
-console.log("Hello World!);
+/**
+ * This file handles all server side operations and performs various
+ * functions such as post, get, and listen, as well as calls back to the client side.
+ * 
+ * Authors: Sarah Derby (A00443128)
+ * 
+ */
+ const express = require("express"); // start express application
+ const server = express(); // define top level function
+ const port = 3008;
+ var activeBank = [],
+    allWords = [],
+    inactiveWords = [],
+    activePicture = [],
+    allPictures = [],
+    inactivePictures = [],
+    activeSounds = [],
+    allSounds = [],
+    inactiveSounds = [];
+ 
+ server.use(express.json()); // implement JSON recognition
+ server.use(express.urlencoded({ extended: true })); // implement incoming name:value pairs to be any type
+ 
+ let allowCrossDomain = function (req, res, next) {
+   res.header("Access-Control-Allow-Origin", "*"); // allow any origin
+   res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE"); // allow any method
+   res.header("Access-Control-Allow-Headers", "Content-Type"); // accept only headers with this type
+   next(); // middleware callback function required for processing
+ };
+ 
+ server.use(allowCrossDomain); // implement allowable domain characteristics
+ 
+ // Upon receiving a get at this url execute callback function
+ server.get("/getBank", function (req, res) {
+   console.log(req.url);
+   return res.status(200).send(activeBank);
+ });
+ 
+ // Upon receiving a get at this url execute callback function
+ server.get("/getUnused", function (req, res) {
+   console.log(req.url);
+   return res.status(200).send(inactiveWords);
+ });
+ 
+ // Upon receiving a post at this url execute callback function
+ server.post("/newWord", function (req, res) {
+   console.log(req.body.word);
+   allWords.push(req.body.word);
+   inactiveWords.push(req.body.word)
+   return res.status(200).send(allWords);
+ });
+ 
+ // Upon receiving a post at this url execute callback function
+ server.post("/newPic", function (req, res) {
+   console.log(req.body.picture);
+   allPictures.push(req.body.picture);
+   inactivePictures.push(req.body.picture);
+   return res.status(200).send(allPictures);
+ });
+ 
+ // Upon receiving a post at this url execute callback function
+ server.post("/newSound", function (req, res) {
+   console.log(req.body.rec);
+   allSounds.push(req.body.rec);
+   inactiveSounds.push(req.body.rec);
+   return res.status(200).send(allSounds);
+ });
+ 
+ server.get("/loadWordBank", function (req, res) {
+   console.log(req.url);
+   return res.status(200).send(activeBank);
+ });
+ 
+ // Listens for activity on port and reports back when server is running
+ server.listen(port, function () {
+   console.log("Server running.");
+ });
